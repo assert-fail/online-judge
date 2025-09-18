@@ -2,9 +2,13 @@ package main
 
 import (
 	"backend/config"
+	"backend/internal/router"
 	"backend/pkg/database"
+	"fmt"
 	"log"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -24,5 +28,10 @@ func main() {
 
 	if err := db.AutoMigrate(); err != nil {
 		log.Fatalln("❌ Unable to migrate database: ", err)
+	}
+
+	r := router.SetupRouter(gin.DebugMode, cfg.App.TrustedProxies)
+	if err := r.Run(fmt.Sprintf(":%d", cfg.App.Port)); err != nil {
+		log.Fatalln("❌ Unable to start server: ", err)
 	}
 }
