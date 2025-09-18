@@ -1,0 +1,13 @@
+app:
+  name: online-judge-backend
+  port: 8080
+  trusted_proxies: ["127.0.0.1", "localhost"]
+
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: P@ssw0rd
+  name: oj_db
+  max_idle_conns: 10
+  max_open_conns: 100
