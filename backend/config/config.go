@@ -25,6 +25,16 @@ type Config struct {
 	} `mapstructure:"database"`
 }
 
+type Database struct {
+	Host         string `mapstructure:"host"`
+	Port         int    `mapstructure:"port"`
+	User         string `mapstructure:"user"`
+	Password     string `mapstructure:"password"`
+	Name         string `mapstructure:"name"`
+	MaxIdleConns int    `mapstructure:"max_idle_conns"`
+	MaxOpenConns int    `mapstructure:"max_open_conns"`
+}
+
 var appConfig Config
 
 func LoadConfig() (*Config, error) {
