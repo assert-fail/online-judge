@@ -1,18 +1,21 @@
 package router
 
 import (
+	"backend/internal/models/errors"
+	"backend/internal/models/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(mode string, trustedProxies []string) *gin.Engine {
-	gin.SetMode(mode)
-	r := gin.Default()
-	r.SetTrustedProxies(trustedProxies)
+func SetupRouter(r *gin.Engine) *gin.Engine {
 
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello, World!"})
+		c.JSON(http.StatusOK, response.NewSuccessMessage("Welcome to the Online Judge API"))
+	})
+
+	r.NoRoute(func(c *gin.Context) {
+		c.Error(errors.NewNotFoundError("Page Not Found."))
 	})
 
 	return r

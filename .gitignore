@@ -3,10 +3,13 @@ frontend/node_modules
 frontend/dist
 frontend/dist-ssr
 frontend/*.local
+frontend/log
 
 backend/tmp
+backend/log
 
 judge/tmp
+judge/log
 
 # Editor directories and files
 .vscode/*

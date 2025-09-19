@@ -1,7 +1,8 @@
 app:
   name: online-judge-backend
   port: 8080
-  trusted_proxies: ["127.0.0.1", "localhost"]
+  trusted_proxies: ["127.0.0.1"]
+  mode: development
 
 database:
   host: localhost

@@ -13,6 +13,7 @@ type Config struct {
 		Name           string   `mapstructure:"name"`
 		Port           int      `mapstructure:"port"`
 		TrustedProxies []string `mapstructure:"trusted_proxies"`
+		Mode           string   `mapstructure:"mode"`
 	} `mapstructure:"app"`
 	Database struct {
 		Host         string `mapstructure:"host"`
@@ -61,6 +62,7 @@ const configTemplate = `✅ Configuration loaded:
 	Name: {{.App.Name}}
 	Port: {{.App.Port}}
 	Trusted Proxies: {{range $index, $proxy := .App.TrustedProxies}}{{if $index}}, {{end}}{{$proxy}}{{end}}{{if not .App.TrustedProxies}}None{{end}}
+	Mode: {{.App.Mode}}
 😀 Database:
 	Port: {{.Database.Port}}
 	User: {{.Database.User}}
