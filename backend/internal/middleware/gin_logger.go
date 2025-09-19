@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"backend/internal/models/response"
-	"backend/pkg/logger"
+	"backend/internal/pkg/logger"
+	"backend/internal/response"
 	"net/http"
 	"runtime/debug"
 	"time"

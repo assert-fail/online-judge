@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"backend/internal/models/errors"
-	"backend/internal/models/response"
-	"backend/pkg/logger"
+	"backend/internal/errors"
+	"backend/internal/pkg/logger"
+	"backend/internal/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,10 +16,7 @@ func ErrorHandler() gin.HandlerFunc {
 
 		errorNum := len(c.Errors)
 		if errorNum > 0 {
-			logger.Error().
-				Err(c.Errors[0]).
-				Int("error_count", errorNum).
-				Msg("Handling error in middleware")
+			logger.Debug().Msgf("Number of errors: %d", errorNum)
 
 			switch err := c.Errors[0].Err.(type) {
 			case *errors.AppError:

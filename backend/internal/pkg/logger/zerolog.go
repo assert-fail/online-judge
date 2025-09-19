@@ -32,7 +32,12 @@ func Init(env string) {
 				return "\x1b[32m" + i.(string) + "\x1b[0m" // 绿色
 			},
 		}
-		GlobalLogger = zerolog.New(output).With().Timestamp().Logger()
+
+		GlobalLogger = zerolog.New(output).
+			With().
+			Timestamp().
+			Logger()
+
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	} else {
 		// 生产环境：JSON 格式
@@ -40,13 +45,18 @@ func Init(env string) {
 		logFileName := "log/" + time.Now().Format("2006-01-02") + ".log"
 		logFile, err = os.OpenFile(logFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
-			log.Fatal().Err(err).Msg("❌ Failed to open log file")
+			log.Fatal().
+				Err(err).
+				Msg("❌ Failed to open log file")
 		}
+
 		GlobalLogger = zerolog.New(logFile).
 			With().
 			Timestamp().
 			Logger()
+
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+
 		setupCloseHandler()
 	}
 

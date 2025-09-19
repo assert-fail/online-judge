@@ -11,7 +11,10 @@ import (
 )
 
 func InitDB(db config.Database) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shanghai", db.Host, db.User, db.Password, db.Name, db.Port)
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shanghai",
+		db.Host, db.User, db.Password, db.Name, db.Port,
+	)
 
 	var err error
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
