@@ -22,22 +22,8 @@ func NewAppError(code int, message, details string) *AppError {
 	}
 }
 
-// func NewInternalError(details string) *AppError {
-// 	return &AppError{
-// 		Code:    http.StatusInternalServerError,
-// 		Message: "Internal server error",
-// 		Details: details,
-// 	}
-// }
-
-func NewNotFoundError(details string) *AppError {
-	return &AppError{
-		Code:    http.StatusNotFound,
-		Message: "Resource not found",
-		Details: details,
-	}
-}
-
+// 由 validator 处理
+// 400
 // func NewBadRequestError(details string) *AppError {
 // 	return &AppError{
 // 		Code:    http.StatusBadRequest,
@@ -46,6 +32,7 @@ func NewNotFoundError(details string) *AppError {
 // 	}
 // }
 
+// 401
 func NewUnauthorizedError(details string) *AppError {
 	return &AppError{
 		Code:    http.StatusUnauthorized,
@@ -54,6 +41,7 @@ func NewUnauthorizedError(details string) *AppError {
 	}
 }
 
+// 403
 func NewForbiddenError(details string) *AppError {
 	return &AppError{
 		Code:    http.StatusForbidden,
@@ -61,3 +49,40 @@ func NewForbiddenError(details string) *AppError {
 		Details: details,
 	}
 }
+
+// 404
+func NewNotFoundError(details string) *AppError {
+	return &AppError{
+		Code:    http.StatusNotFound,
+		Message: "Resource not found",
+		Details: details,
+	}
+}
+
+// 409
+func NewConflictError(details string) *AppError {
+	return &AppError{
+		Code:    http.StatusConflict,
+		Message: "Conflict",
+		Details: details,
+	}
+}
+
+// 422
+func NewUnprocessableEntityError(details string) *AppError {
+	return &AppError{
+		Code:    http.StatusUnprocessableEntity,
+		Message: "Unprocessable Entity",
+		Details: details,
+	}
+}
+
+// 以上错误之外统一为500并统一处理
+// 500
+// func NewInternalError(details string) *AppError {
+// 	return &AppError{
+// 		Code:    http.StatusInternalServerError,
+// 		Message: "Internal server error",
+// 		Details: details,
+// 	}
+// }
