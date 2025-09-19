@@ -22,7 +22,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (ur *userRepository) Create(user *User) error {
-	return nil
+	return ur.db.Create(user).Error
 }
 
 func (ur *userRepository) Delete(userID uint) error {
@@ -30,15 +30,27 @@ func (ur *userRepository) Delete(userID uint) error {
 }
 
 func (ur *userRepository) FindByUsername(username string) (*User, error) {
-	return nil, nil
+	var user *User
+	if err := ur.db.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (ur *userRepository) FindByEmail(email string) (*User, error) {
-	return nil, nil
+	var user *User
+	if err := ur.db.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (ur *userRepository) FindByID(userID uint) (*User, error) {
-	return nil, nil
+	var user *User
+	if err := ur.db.Where("id = ?", userID).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (ur *userRepository) Update(user *User) error {

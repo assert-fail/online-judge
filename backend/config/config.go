@@ -14,6 +14,7 @@ type Config struct {
 		Port           int      `mapstructure:"port"`
 		TrustedProxies []string `mapstructure:"trusted_proxies"`
 		Mode           string   `mapstructure:"mode"`
+		JWTSecret      string   `mapstructure:"jwt_secret"`
 	} `mapstructure:"app"`
 	Database struct {
 		Host         string `mapstructure:"host"`
@@ -36,7 +37,7 @@ type Database struct {
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
 }
 
-var appConfig Config
+var AppConfig Config
 
 func LoadConfig() (*Config, error) {
 	viper.SetConfigName("config")
@@ -48,12 +49,12 @@ func LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
-	if err := viper.Unmarshal(&appConfig); err != nil {
+	if err := viper.Unmarshal(&AppConfig); err != nil {
 		return nil, err
 	}
 
 	printConfig()
-	return &appConfig, nil
+	return &AppConfig, nil
 }
 
 // 用于格式化配置信息的模板
@@ -63,6 +64,7 @@ const configTemplate = `✅ Configuration loaded:
 	Port: {{.App.Port}}
 	Trusted Proxies: {{range $index, $proxy := .App.TrustedProxies}}{{if $index}}, {{end}}{{$proxy}}{{end}}{{if not .App.TrustedProxies}}None{{end}}
 	Mode: {{.App.Mode}}
+	JWT Secret: {{.App.JWTSecret}}
 😀 Database:
 	Port: {{.Database.Port}}
 	User: {{.Database.User}}
@@ -80,7 +82,7 @@ func printConfig() {
 		return
 	}
 
-	if err := templ.Execute(os.Stdout, appConfig); err != nil {
+	if err := templ.Execute(os.Stdout, AppConfig); err != nil {
 		log.Println("⚠️ Failed to execute config template: ", err)
 		return
 	}

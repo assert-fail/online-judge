@@ -10,7 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(r *gin.Engine, uc user.UserController) *gin.Engine {
+func SetupRouter(
+	r *gin.Engine,
+	uc user.UserController,
+) *gin.Engine {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, response.NewSuccessMessage("Welcome to the Online Judge API"))
@@ -21,6 +24,7 @@ func SetupRouter(r *gin.Engine, uc user.UserController) *gin.Engine {
 		user := v1.Group("/user")
 		{
 			user.POST("/register", uc.Register)
+			user.POST("/login", uc.Login)
 		}
 	}
 

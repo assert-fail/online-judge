@@ -3,6 +3,7 @@ app:
   port: 8080
   trusted_proxies: ["127.0.0.1"]
   mode: development
+  jwt_secret: my-secret-key
 
 database:
   host: localhost
