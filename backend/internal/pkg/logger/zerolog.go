@@ -2,6 +2,7 @@ package logger
 
 import (
 	"os"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -9,53 +10,62 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var GlobalLogger zerolog.Logger
-var logFile *os.File
+var (
+	GlobalLogger zerolog.Logger
+	logFile      *os.File
+	onceLogger   sync.Once
+)
 
 func Init(env string) (*os.File, error) {
-	zerolog.TimeFieldFormat = time.RFC3339Nano
-	zerolog.TimestampFunc = func() time.Time {
-		return time.Now().UTC()
-	}
-
-	if env == "development" {
-		// 开发环境：彩色控制台输出
-		output := zerolog.ConsoleWriter{
-			Out:        os.Stdout,
-			TimeFormat: "2006-01-02 15:04:05.000",
-			FormatLevel: func(i any) string {
-				return "\x1b[36m" + i.(string) + "\x1b[0m" // 青色
-			},
-			FormatMessage: func(i any) string {
-				return "\x1b[32m" + i.(string) + "\x1b[0m" // 绿色
-			},
+	onceLogger.Do(func() {
+		zerolog.TimeFieldFormat = time.RFC3339Nano
+		zerolog.TimestampFunc = func() time.Time {
+			return time.Now().UTC()
 		}
 
-		GlobalLogger = zerolog.New(output).
-			With().
-			Timestamp().
-			Logger()
+		if env == "development" {
+			// 开发环境：彩色控制台输出
+			output := zerolog.ConsoleWriter{
+				Out:        os.Stdout,
+				TimeFormat: "2006-01-02 15:04:05.000",
+				FormatLevel: func(i any) string {
+					return "\x1b[36m" + i.(string) + "\x1b[0m" // 青色
+				},
+				FormatMessage: func(i any) string {
+					return "\x1b[32m" + i.(string) + "\x1b[0m" // 绿色
+				},
+			}
 
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	} else {
-		// 生产环境：JSON 格式
-		var err error
-		logFileName := "log/" + time.Now().Format("2006-01-02") + ".log"
-		logFile, err = os.OpenFile(logFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			return nil, err
+			GlobalLogger = zerolog.New(output).
+				With().
+				Timestamp().
+				Logger()
+
+			zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		} else {
+			// 生产环境：JSON 格式
+			var err error
+			logFileName := "log/" + time.Now().Format("2006-01-02") + ".log"
+			logFile, err = os.OpenFile(
+				logFileName,
+				os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+				0644,
+			)
+			if err != nil {
+				log.Fatal().Err(err).Msg("❌ Failed to open log file")
+			}
+
+			GlobalLogger = zerolog.New(logFile).
+				With().
+				Timestamp().
+				Logger()
+
+			zerolog.SetGlobalLevel(zerolog.InfoLevel)
 		}
 
-		GlobalLogger = zerolog.New(logFile).
-			With().
-			Timestamp().
-			Logger()
-
-		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	}
-
-	// 替换标准库的 log
-	log.Logger = GlobalLogger
+		// 替换标准库的 log
+		log.Logger = GlobalLogger
+	})
 
 	return logFile, nil
 }
