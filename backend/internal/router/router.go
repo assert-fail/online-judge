@@ -2,6 +2,7 @@ package router
 
 import (
 	"backend/internal/errors"
+	"backend/internal/middleware"
 	"backend/internal/models/user"
 	"backend/internal/pkg/logger"
 	"backend/internal/response"
@@ -25,6 +26,16 @@ func SetupRouter(
 		{
 			user.POST("/register", uc.Register)
 			user.POST("/login", uc.Login)
+		}
+
+		protected := v1.Group("/", middleware.ValidateToken())
+		{
+			user := protected.Group("/user")
+			{
+				user.GET("/profile", func(c *gin.Context) {
+					c.JSON(http.StatusOK, response.NewSuccessMessage("success"))
+				})
+			}
 		}
 	}
 

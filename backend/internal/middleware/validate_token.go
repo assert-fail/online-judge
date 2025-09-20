@@ -31,7 +31,7 @@ func ValidateToken() gin.HandlerFunc {
 			return
 		}
 
-		foundToken, err := database.RDBInstance.Get(c, "token"+claim.Username).Result()
+		foundToken, err := database.RDBInstance.Get(c, "token:"+claim.Username).Result()
 		if err != nil || foundToken != token {
 			c.AbortWithStatusJSON(
 				http.StatusUnauthorized,

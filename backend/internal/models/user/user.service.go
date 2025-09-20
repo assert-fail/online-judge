@@ -81,7 +81,7 @@ func (us *userService) Login(
 
 	if err := database.RDBInstance.Set(
 		c,
-		"token"+foundUser.Username,
+		"token:"+foundUser.Username,
 		token,
 		time.Duration(
 			config.AppConfig.App.TokenExpirationHours,
@@ -89,6 +89,8 @@ func (us *userService) Login(
 	).Err(); err != nil {
 		return nil, "", err
 	}
+
+	foundUser.Password = ""
 
 	return foundUser, token, nil
 }
