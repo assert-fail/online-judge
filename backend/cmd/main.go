@@ -76,11 +76,21 @@ func init() {
 
 	// 添加中间件
 	r.Use(
-		middleware.RequestIDMiddleware(), // id -> next
-		middleware.GinRecovery(),         // defer recover() -> next
+		// id -> next
+		middleware.RequestIDMiddleware(),
+
+		// defer recover() {
+		// 	   if don't recover -> abort
+		// } -> next
+		middleware.GinRecovery(),
+
 		// gin.Recovery(),
-		middleware.GinLogger(),    // time -> next -> log
-		middleware.ErrorHandler(), // next -> err -> handle
+
+		// time -> next -> log
+		middleware.GinLogger(),
+
+		// next -> err -> handle
+		middleware.ErrorHandler(),
 	)
 
 	// 创建Handler

@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	rdbInstance *redis.Client
+	RDBInstance *redis.Client
 	onceRedis   sync.Once
 )
 
 func InitRedis(cfg config.Redis) (*redis.Client, error) {
 	onceRedis.Do(func() {
-		rdbInstance = redis.NewClient(&redis.Options{
+		RDBInstance = redis.NewClient(&redis.Options{
 			Addr:         cfg.Host,
 			Password:     cfg.Password,
 			DB:           cfg.DB,
@@ -29,7 +29,7 @@ func InitRedis(cfg config.Redis) (*redis.Client, error) {
 		})
 
 		ctx := context.Background()
-		pong, err := rdbInstance.Ping(ctx).Result()
+		pong, err := RDBInstance.Ping(ctx).Result()
 		if err != nil {
 			logger.Fatal().Err(err).Msg("❌ Failed to connect to Redis")
 		}
@@ -37,5 +37,5 @@ func InitRedis(cfg config.Redis) (*redis.Client, error) {
 		logger.Info().Msgf("Redis connected: %s", pong)
 	})
 
-	return rdbInstance, nil
+	return RDBInstance, nil
 }

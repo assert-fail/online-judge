@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	dbInstance   *gorm.DB
+	DBInstance   *gorm.DB
 	oncePostgres sync.Once
 )
 
@@ -25,12 +25,12 @@ func InitDB(db config.Postgres) (*gorm.DB, error) {
 		)
 
 		var err error
-		dbInstance, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		DBInstance, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
 			logger.Fatal().Err(err).Msg("❌ Failed to connect to database")
 		}
 
-		sqlDB, err := dbInstance.DB()
+		sqlDB, err := DBInstance.DB()
 		if err != nil {
 			logger.Fatal().Err(err).Msg("❌ Failed to get database instance")
 		}
@@ -42,5 +42,5 @@ func InitDB(db config.Postgres) (*gorm.DB, error) {
 		logger.Info().Msg("PostgreSQL connected")
 	})
 
-	return dbInstance, nil
+	return DBInstance, nil
 }

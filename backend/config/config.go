@@ -10,12 +10,13 @@ import (
 
 type Config struct {
 	App struct {
-		Name              string   `mapstructure:"name"`
-		Port              int      `mapstructure:"port"`
-		TrustedProxies    []string `mapstructure:"trusted_proxies"`
-		Mode              string   `mapstructure:"mode"`
-		JWTSecret         string   `mapstructure:"jwt_secret"`
-		ServerExitTimeout int      `mapstructure:"server_exit_timeout"`
+		Name                 string   `mapstructure:"name"`
+		Port                 int      `mapstructure:"port"`
+		TrustedProxies       []string `mapstructure:"trusted_proxies"`
+		Mode                 string   `mapstructure:"mode"`
+		JWTSecret            string   `mapstructure:"jwt_secret"`
+		ServerExitTimeout    int      `mapstructure:"server_exit_timeout"`
+		TokenExpirationHours int      `mapstructure:"token_expiration_hours"`
 	} `mapstructure:"app"`
 	Database struct {
 		Postgres struct {
@@ -92,7 +93,8 @@ const configTemplate = `✅ Configuration loaded:
 	Trusted Proxies: {{range $index, $proxy := .App.TrustedProxies}}{{if $index}}, {{end}}{{$proxy}}{{end}}{{if not .App.TrustedProxies}}None{{end}}
 	Mode: {{.App.Mode}}
 	JWT Secret: {{.App.JWTSecret}}
-	Server Exit Timeout: {{.App.ServerExitTimeout}}s
+	Server Exit Timeout: {{.App.ServerExitTimeout}} s
+	Token Expiration Hours: {{.App.TokenExpirationHours}} hours
 😀 Database:
 	Postgres:
 		Port: {{.Database.Postgres.Port}}
@@ -107,9 +109,9 @@ const configTemplate = `✅ Configuration loaded:
 		DB: {{.Database.Redis.DB}}
 		Max Idle Conns: {{.Database.Redis.MaxIdleConns}}
 		Pool Size: {{.Database.Redis.PoolSize}}
-		Dial Timeout: {{.Database.Redis.DialTimeout}}s
-		Read Timeout: {{.Database.Redis.ReadTimeout}}s
-		Write Timeout: {{.Database.Redis.WriteTimeout}}s
+		Dial Timeout: {{.Database.Redis.DialTimeout}} s
+		Read Timeout: {{.Database.Redis.ReadTimeout}} s
+		Write Timeout: {{.Database.Redis.WriteTimeout}} s
 `
 
 // 使用模板输出配置信息到日志

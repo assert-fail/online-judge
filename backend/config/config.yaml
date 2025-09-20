@@ -2,9 +2,10 @@ app:
   name: online-judge-backend
   port: 8080
   trusted_proxies: ["127.0.0.1"]
-  mode: debug
+  mode: development # 可选值：development, production
   jwt_secret: my-secret-key
   server_exit_timeout: 5
+  token_expiration_hours: 72
 
 database:
   postgres:

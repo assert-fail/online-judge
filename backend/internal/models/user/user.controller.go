@@ -61,7 +61,7 @@ func (uc *userController) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := uc.service.Login(&req)
+	user, token, err := uc.service.Login(c, &req)
 	if err != nil {
 		if appErr, ok := err.(*errors.AppError); ok {
 			log.Warn().Err(appErr).Msg("Failed to login user")
@@ -74,8 +74,9 @@ func (uc *userController) Login(c *gin.Context) {
 
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK,
-		response.NewSuccessMessage(
+		response.NewSuccessData(
 			"User login successfully",
+			*user,
 		),
 	)
 }
