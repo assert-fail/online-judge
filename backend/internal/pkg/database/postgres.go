@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"backend/config"
+	"backend/internal/pkg/logger"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func InitDB(db config.Database) (*gorm.DB, error) {
+func InitDB(db config.Postgres) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shanghai",
 		db.Host, db.User, db.Password, db.Name, db.Port,
@@ -30,6 +31,8 @@ func InitDB(db config.Database) (*gorm.DB, error) {
 	sqlDB.SetMaxIdleConns(db.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(db.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	logger.Info().Msg("PostgreSQL connected")
 
 	return DB, nil
 }

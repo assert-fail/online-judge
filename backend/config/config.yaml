@@ -2,14 +2,25 @@ app:
   name: online-judge-backend
   port: 8080
   trusted_proxies: ["127.0.0.1"]
-  mode: development
+  mode: debug
   jwt_secret: my-secret-key
+  server_exit_timeout: 5
 
 database:
-  host: localhost
-  port: 5432
-  user: postgres
-  password: P@ssw0rd
-  name: oj_db
-  max_idle_conns: 10
-  max_open_conns: 100
+  postgres:
+    host: localhost
+    port: 5432
+    user: postgres
+    password: P@ssw0rd
+    name: oj_db
+    max_idle_conns: 10
+    max_open_conns: 100
+  redis:
+    host: localhost:6379
+    password: ""
+    db: 0
+    max_idle_conns: 10
+    pool_size: 100
+    dial_timeout: 5
+    read_timeout: 3
+    write_timeout: 3

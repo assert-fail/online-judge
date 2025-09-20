@@ -2,8 +2,6 @@ package logger
 
 import (
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +12,7 @@ import (
 var GlobalLogger zerolog.Logger
 var logFile *os.File
 
-func Init(env string) {
+func Init(env string) (*os.File, error) {
 	zerolog.TimeFieldFormat = time.RFC3339Nano
 	zerolog.TimestampFunc = func() time.Time {
 		return time.Now().UTC()
@@ -45,9 +43,7 @@ func Init(env string) {
 		logFileName := "log/" + time.Now().Format("2006-01-02") + ".log"
 		logFile, err = os.OpenFile(logFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
-			log.Fatal().
-				Err(err).
-				Msg("❌ Failed to open log file")
+			return nil, err
 		}
 
 		GlobalLogger = zerolog.New(logFile).
@@ -56,25 +52,12 @@ func Init(env string) {
 			Logger()
 
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-
-		setupCloseHandler()
 	}
 
 	// 替换标准库的 log
 	log.Logger = GlobalLogger
-}
 
-func setupCloseHandler() {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		log.Info().Msg("Shutting down logger...")
-		if logFile != nil {
-			logFile.Close()
-		}
-		os.Exit(0)
-	}()
+	return logFile, nil
 }
 
 // 便捷方法
