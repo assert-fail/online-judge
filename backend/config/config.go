@@ -77,7 +77,10 @@ func LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
-	printConfig()
+	if AppConfig.App.Mode == "development" {
+		printConfig()
+	}
+
 	return &AppConfig, nil
 }
 
